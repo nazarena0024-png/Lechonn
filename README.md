@@ -138,10 +138,17 @@ function startGame(){
  foods.forEach(f=>f.el.remove());foods=[];
  coins=0;time=30;last=0;coinsEl.textContent=0;timeEl.textContent=30;
  overlay.style.display="none";playing=true;
+musica.play().catch(()=>{});
  spawn=setInterval(spawnFood,850);
  clock=setInterval(()=>{if(!playing)return;time--;timeEl.textContent=time;if(time<=0)endGame()},1000);
  raf=requestAnimationFrame(frame);
 }
+ // Música de fondo de Piggy Picnic
+const musica = new Audio(
+  "https://cdn.pixabay.com/audio/2022/10/25/audio_946b7e3b5c.mp3"
+);
+musica.loop = true;
+musica.volume = 0.35;
 start.onclick=startGame;
 </script>
 </body>
