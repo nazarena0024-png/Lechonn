@@ -43,7 +43,7 @@ footer{padding:12px;font-size:13px}
 </header>
 <div class="stats">
 <div class="stat">🪙 Monedas: <span id="coins">0</span></div>
-<div class="stat">⏰ Tiempo: <span id="time">90</span>s</div>
+<div class="stat">⏰ Tiempo: <span id="time">30</span>s</div>
 </div>
 <div id="game">
 <div class="cloud c1"></div><div class="cloud c2"></div>
