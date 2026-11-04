@@ -1,0 +1,226 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #ffe6ef;
+  color: #873c58;
+  font-family: "Trebuchet MS", sans-serif;
+  text-align: center;
+}
+
+header {
+  padding: 12px 8px 4px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 30px;
+  color: #d94f85;
+  text-shadow: 2px 2px white;
+}
+
+header p {
+  margin: 4px;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.stat {
+  background: #fff8fa;
+  border: 2px solid #f4a8c2;
+  border-radius: 18px;
+  padding: 10px;
+  flex: 1;
+  max-width: 180px;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+#game {
+  position: relative;
+  overflow: hidden;
+  width: 94vw;
+  max-width: 440px;
+  height: 64vh;
+  min-height: 380px;
+  max-height: 580px;
+  margin: auto;
+  border: 5px solid white;
+  border-radius: 25px;
+  background: linear-gradient(#9cdbfa 0%, #d7f2ff 47%, #b8e5a0 48%, #7ec46c 100%);
+  box-shadow: 0 0 0 3px #f5a5c1;
+  touch-action: none;
+}
+
+.cloud {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  width: 90px;
+  height: 35px;
+  top: 13%;
+  opacity: 0.9;
+}
+
+.cloud:before,
+.cloud:after {
+  content: "";
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.cloud:before {
+  width: 42px;
+  height: 42px;
+  left: 12px;
+  top: -17px;
+}
+
+.cloud:after {
+  width: 35px;
+  height: 35px;
+  right: 12px;
+  top: -12px;
+}
+
+.c1 {
+  left: -20px;
+}
+
+.c2 {
+  right: -25px;
+  top: 28%;
+}
+
+.bush {
+  position: absolute;
+  bottom: 23%;
+  height: 95px;
+  width: 120px;
+  border-radius: 50%;
+  background: #75b85e;
+  border: 5px solid #639e50;
+}
+
+.b1 {
+  left: -55px;
+}
+
+.b2 {
+  right: -55px;
+}
+
+.fence {
+  position: absolute;
+  bottom: 21%;
+  left: 0;
+  width: 100%;
+  height: 13px;
+  background: #d9a675;
+  border-top: 3px solid #b77c51;
+  border-bottom: 3px solid #b77c51;
+}
+
+.fence:before {
+  content: "";
+  position: absolute;
+  inset: -22px 10% 0;
+  background: repeating-linear-gradient(90deg, #d9a675 0 12px, transparent 12px 65px);
+  height: 35px;
+}
+
+#blanket {
+  position: absolute;
+  bottom: 0;
+  height: 24%;
+  width: 100%;
+  background-color: #fff0f5;
+  background-image: linear-gradient(90deg, #f6a8c6 25%, transparent 25%, transparent 75%, #f6a8c6 75%), linear-gradient(#f6a8c6 25%, transparent 25%, transparent 75%, #f6a8c6 75%);
+  background-size: 48px 48px;
+  background-position: 0 0, 0 0;
+  border-top: 5px solid white;
+}
+
+#pig {
+  position: absolute;
+  z-index: 3;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 112px;
+  height: 140px;
+  touch-action: none;
+}
+
+.food {
+  position: absolute;
+  z-index: 2;
+  width: 43px;
+  height: 48px;
+}
+
+.food svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+#overlay {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  background: rgba(255, 240, 242, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.panel {
+  background: #fff9fb;
+  border: 3px dashed #f18ab3;
+  border-radius: 28px;
+  padding: 20px 12px;
+  width: 100%;
+  max-width: 310px;
+  box-shadow: 0 4px 0 #f8c1d4;
+}
+
+.panel h2 {
+  margin: 8px 0;
+  font-size: 27px;
+}
+
+.panel p {
+  line-height: 1.5;
+}
+
+button {
+  background: #ef70a1;
+  border: 3px solid white;
+  color: white;
+  font-size: 19px;
+  font-weight: bold;
+  border-radius: 25px;
+  padding: 12px 25px;
+  box-shadow: 0 4px #cb527f;
+  cursor: pointer;
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px #cb527f;
+}
+
+footer {
+  padding: 12px;
+  font-size: 13px;
+}
