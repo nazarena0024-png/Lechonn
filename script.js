@@ -51,7 +51,7 @@ const drawings = [
   `,
 ];
 
-const musica = new Audio('https://cdn.pixabay.com/audio/2022/10/25/audio_946b7e3b5c.mp3');
+const musica = new Audio('music.mp3');
 musica.loop = true;
 musica.volume = 0.35;
 
