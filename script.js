@@ -4,6 +4,7 @@ const ui = {
   overlay: document.getElementById('overlay'),
   coins: document.getElementById('coins'),
   time: document.getElementById('time'),
+  lives: document.getElementById('lives'),
   start: document.getElementById('start'),
   message: document.getElementById('message'),
   instructions: document.getElementById('instructions'),
