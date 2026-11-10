@@ -143,6 +143,12 @@ function updateFrame(timestamp) {
       gameState.foods.splice(index, 1);
       gameState.lives -= 1;
 ui.lives.textContent = String(gameState.lives);
+    if (gameState.lives <= 0) {
+        endGame();
+        return;
+      }
+    }
+  }
 
 if (gameState.lives <= 0) {
   endGame();
@@ -177,11 +183,13 @@ function startGame() {
 
   gameState.coins = 0;
   gameState.timeLeft = 30;
+  gameState.lives = 3;
   gameState.lastTimestamp = 0;
   gameState.isPlaying = true;
 
   ui.coins.textContent = '0';
   ui.time.textContent = '30';
+  ui.lives.textContent = '3';
   ui.overlay.style.display = 'none';
 
   const initialPigLeft = (ui.game.clientWidth - ui.pig.offsetWidth) / 2;
