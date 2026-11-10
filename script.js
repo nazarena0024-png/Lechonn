@@ -182,13 +182,13 @@ function startGame() {
   gameState.foods = [];
 
   gameState.coins = 0;
-  gameState.timeLeft = 30;
+  gameState.timeLeft = 90;
   gameState.lives = 3;
   gameState.lastTimestamp = 0;
   gameState.isPlaying = true;
 
   ui.coins.textContent = '0';
-  ui.time.textContent = '30';
+  ui.time.textContent = '90';
   ui.lives.textContent = '3';
   ui.overlay.style.display = 'none';
 
