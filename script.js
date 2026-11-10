@@ -13,6 +13,7 @@ const ui = {
 const gameState = {
   coins: 0,
   timeLeft: 30,
+  lives: 3,
   isPlaying: false,
   foods: [],
   spawnTimer: null,
@@ -140,6 +141,12 @@ function updateFrame(timestamp) {
     if (food.y > ui.game.clientHeight) {
       food.element.remove();
       gameState.foods.splice(index, 1);
+      gameState.lives -= 1;
+ui.lives.textContent = String(gameState.lives);
+
+if (gameState.lives <= 0) {
+  endGame();
+  return;
     }
   }
 
