@@ -5,16 +5,22 @@ const ui = {
   coins: document.getElementById('coins'),
   time: document.getElementById('time'),
   lives: document.getElementById('lives'),
+  bestScore: document.getElementById('best-score'),
   start: document.getElementById('start'),
   message: document.getElementById('message'),
   instructions: document.getElementById('instructions'),
+  pause: document.getElementById('pause'),
 };
+
+const STORAGE_KEY = 'piggy-picnic-best-score';
 
 const gameState = {
   coins: 0,
-  timeLeft: 30,
+  timeLeft: 90,
   lives: 3,
+  level: 1,
   isPlaying: false,
+  isPaused: false,
   foods: [],
   spawnTimer: null,
   clockTimer: null,
@@ -61,6 +67,57 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
+function getBestScore() {
+  const savedScore = Number(localStorage.getItem(STORAGE_KEY) || 0);
+  return Number.isFinite(savedScore) ? savedScore : 0;
+}
+
+function updateBestScoreDisplay() {
+  ui.bestScore.textContent = String(getBestScore());
+}
+
+function updateDifficulty() {
+  gameState.level = Math.max(1, Math.floor(gameState.coins / 5) + 1);
+  const spawnInterval = Math.max(340, 850 - (gameState.level - 1) * 90);
+
+  if (gameState.isPlaying && gameState.spawnTimer) {
+    clearInterval(gameState.spawnTimer);
+    gameState.spawnTimer = setInterval(createFood, spawnInterval);
+  }
+}
+
+function resetFoodState() {
+  gameState.foods.forEach((food) => food.element.remove());
+  gameState.foods = [];
+}
+
+function stopTimers() {
+  clearInterval(gameState.spawnTimer);
+  clearInterval(gameState.clockTimer);
+  cancelAnimationFrame(gameState.animationFrame);
+  gameState.spawnTimer = null;
+  gameState.clockTimer = null;
+  gameState.animationFrame = null;
+}
+
+function startTimers() {
+  stopTimers();
+  gameState.spawnTimer = setInterval(createFood, Math.max(340, 850 - (gameState.level - 1) * 90));
+  gameState.clockTimer = setInterval(() => {
+    if (!gameState.isPlaying) {
+      return;
+    }
+
+    gameState.timeLeft -= 1;
+    ui.time.textContent = String(gameState.timeLeft);
+
+    if (gameState.timeLeft <= 0) {
+      endGame();
+    }
+  }, 1000);
+  gameState.animationFrame = requestAnimationFrame(updateFrame);
+}
+
 function movePig(xPosition) {
   const gameRect = ui.game.getBoundingClientRect();
   const pigWidth = ui.pig.offsetWidth;
@@ -97,7 +154,7 @@ function createFood() {
     element: item,
     x,
     y: -48,
-    speed: 115 + Math.random() * 70,
+    speed: 115 + Math.random() * 70 + (gameState.level - 1) * 12,
   });
 }
 
@@ -133,6 +190,14 @@ function updateFrame(timestamp) {
     if (collides) {
       gameState.coins += 1;
       ui.coins.textContent = String(gameState.coins);
+      updateDifficulty();
+
+      const bestScore = getBestScore();
+      if (gameState.coins > bestScore) {
+        localStorage.setItem(STORAGE_KEY, String(gameState.coins));
+        updateBestScoreDisplay();
+      }
+
       food.element.remove();
       gameState.foods.splice(index, 1);
       continue;
@@ -142,17 +207,12 @@ function updateFrame(timestamp) {
       food.element.remove();
       gameState.foods.splice(index, 1);
       gameState.lives -= 1;
-ui.lives.textContent = String(gameState.lives);
-    if (gameState.lives <= 0) {
+      ui.lives.textContent = String(gameState.lives);
+
+      if (gameState.lives <= 0) {
         endGame();
         return;
       }
-    }
-  }
-
-if (gameState.lives <= 0) {
-  endGame();
-  return;
     }
   }
 
@@ -161,57 +221,80 @@ if (gameState.lives <= 0) {
 
 function endGame() {
   gameState.isPlaying = false;
-  clearInterval(gameState.spawnTimer);
-  clearInterval(gameState.clockTimer);
-  cancelAnimationFrame(gameState.animationFrame);
-  gameState.foods.forEach((food) => food.element.remove());
-  gameState.foods = [];
+  gameState.isPaused = false;
+  stopTimers();
+  resetFoodState();
   gameState.lastTimestamp = 0;
 
+  const bestScore = getBestScore();
+  if (gameState.coins > bestScore) {
+    localStorage.setItem(STORAGE_KEY, String(gameState.coins));
+  }
+  updateBestScoreDisplay();
+
+  ui.pause.style.display = 'none';
   ui.overlay.style.display = 'flex';
   ui.message.textContent = '¡Picnic terminado!';
-  ui.instructions.innerHTML = `Juntaste <b>${gameState.coins} monedas</b> ♡<br />¡Vamos por otra partida!`;
+  ui.instructions.innerHTML = `Juntaste <b>${gameState.coins} monedas</b> ♡<br />Mejor puntaje: <b>${getBestScore()}</b><br />¡Vamos por otra partida!`;
   ui.start.textContent = 'JUGAR OTRA VEZ';
 }
 
-function startGame() {
-  clearInterval(gameState.spawnTimer);
-  clearInterval(gameState.clockTimer);
-  cancelAnimationFrame(gameState.animationFrame);
-  gameState.foods.forEach((food) => food.element.remove());
-  gameState.foods = [];
-
+function resetGameState() {
   gameState.coins = 0;
   gameState.timeLeft = 90;
   gameState.lives = 3;
+  gameState.level = 1;
+  gameState.isPaused = false;
   gameState.lastTimestamp = 0;
-  gameState.isPlaying = true;
 
   ui.coins.textContent = '0';
   ui.time.textContent = '90';
   ui.lives.textContent = '3';
+  updateBestScoreDisplay();
+}
+
+function startGame() {
+  resetGameState();
+  gameState.isPlaying = true;
+  ui.pause.style.display = 'block';
   ui.overlay.style.display = 'none';
 
   const initialPigLeft = (ui.game.clientWidth - ui.pig.offsetWidth) / 2;
   ui.pig.style.left = `${initialPigLeft}px`;
 
+  resetFoodState();
   musica.play().catch(() => {});
+  startTimers();
+}
 
-  gameState.spawnTimer = setInterval(createFood, 850);
-  gameState.clockTimer = setInterval(() => {
-    if (!gameState.isPlaying) {
-      return;
-    }
+function pauseGame() {
+  if (!gameState.isPlaying) {
+    return;
+  }
 
-    gameState.timeLeft -= 1;
-    ui.time.textContent = String(gameState.timeLeft);
+  gameState.isPlaying = false;
+  gameState.isPaused = true;
+  stopTimers();
 
-    if (gameState.timeLeft <= 0) {
-      endGame();
-    }
-  }, 1000);
+  ui.pause.style.display = 'none';
+  ui.overlay.style.display = 'flex';
+  ui.message.textContent = 'Juego pausado';
+  ui.instructions.innerHTML = 'Toma un respiro y vuelve cuando quieras.<br />¡El picnic sigue esperando!';
+  ui.start.textContent = 'CONTINUAR';
+}
 
-  gameState.animationFrame = requestAnimationFrame(updateFrame);
+function resumeGame() {
+  if (!gameState.isPaused) {
+    return;
+  }
+
+  gameState.isPlaying = true;
+  gameState.isPaused = false;
+  ui.overlay.style.display = 'none';
+  ui.pause.style.display = 'block';
+
+  musica.play().catch(() => {});
+  startTimers();
 }
 
 ui.game.addEventListener('pointerdown', (event) => {
@@ -222,4 +305,29 @@ ui.game.addEventListener('pointerdown', (event) => {
 });
 
 ui.game.addEventListener('pointermove', handlePointerMove);
-ui.start.addEventListener('click', startGame);
+ui.pause.addEventListener('click', () => {
+  if (gameState.isPaused) {
+    resumeGame();
+    return;
+  }
+
+  pauseGame();
+});
+
+ui.start.addEventListener('click', () => {
+  if (gameState.isPaused) {
+    resumeGame();
+    return;
+  }
+
+  startGame();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && gameState.isPlaying && !gameState.isPaused) {
+    pauseGame();
+  }
+});
+
+updateBestScoreDisplay();
+ui.pause.style.display = 'none';

@@ -12,13 +12,26 @@ Un juego web sencillo y atractivo de recogida de comida con temática de picnic.
 - `styles.css`: estilos visuales del juego.
 - `script.js`: lógica del juego, eventos y animación.
 
-## Mejora aplicada en esta etapa
+## Mejoras aplicadas
 
-Se ha refactorizado la versión original para separar la lógica en archivos dedicados y dejar la base lista para crecer sin tener todo el código mezclado en un único `HTML`.
+Se refactorizó la lógica del juego para separar estructura, estilo y comportamiento. Además, se añadieron mejoras clave para que el prototipo sea más usable y entretenido:
+
+- almacenamiento del mejor puntaje con `localStorage`;
+- sistema de niveles progresivos según la cantidad de monedas;
+- pausa y reanudación del juego;
+- sincronización de tiempos y estados para evitar inconsistencias;
+- mejora de accesibilidad y ajustes visuales.
+
+## Cómo jugar
+
+1. Abre `index.html` en tu navegador.
+2. Pulsa el botón de jugar.
+3. Atrapá las comidas, suma monedas y evita dejar caer demasiadas.
+4. Usa el botón de pausa para hacer una interrupción.
 
 ## Próximo paso sugerido
 
-- Añadir almacenamiento de mejor puntaje.
-- Separar aún más la lógica en módulos (estado del juego, render y audio).
-- Agregar niveles y efectos visuales.
+- separar aún más la lógica en módulos (estado del juego, render y audio);
+- agregar efectos sonoros y partículas;
+- añadir un sistema de ranking o niveles más complejos.
 
